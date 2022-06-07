@@ -69,5 +69,21 @@ async def split_string(body: str):
     result.append(temp)
     return result
 
+class AsyncCounter:
+    def __init__(self, stop):
+        self.current = 0
+        self.stop = stop
+ 
+    def __aiter__(self):
+        return self
+ 
+    async def __anext__(self):
+        if self.current < self.stop:
+            await asyncio.sleep(1.0)
+            r = self.current
+            self.current += 1
+            return r
+        else:
+            raise StopAsyncIteration
     
 bot.run(bot_token)
