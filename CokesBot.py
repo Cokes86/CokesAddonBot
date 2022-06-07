@@ -27,7 +27,7 @@ async def send_latest_version(channel: discord.TextChannel):
     latest = repo.get_latest_release()
     await channel.send('코크스 애드온 %s 업데이트입니다.'%(latest.title))
     
-    for send_message in split_string(latest.body):
+    async for send_message in split_string(latest.body):
         await channel.send('```%s```'%(send_message))
     
 async def send_latest_version_all():
