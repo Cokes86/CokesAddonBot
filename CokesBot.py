@@ -56,7 +56,6 @@ async def send_latest_version_all():
                 
 def get_bot(channel: discord.TextChannel):
     for member in channel.members:
-        print(member.name)
         try:
             if member.id == 812320103617134614:
                 return member
