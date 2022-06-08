@@ -76,7 +76,7 @@ def split_string(body: str):
     temp = "";
     for string in split_strings:
         lens = len(string);
-        if (len(temp) + lens > 2000):
+        if (len(temp) + lens > 1994):
             result.append(temp)
             temp = ""
             
