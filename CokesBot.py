@@ -75,8 +75,8 @@ def split_string(body: str):
     result = []
     temp = "";
     for string in split_strings:
-        lens = len(string.encode("UTF-8"));
-        if (len(temp.encode("UTF-8")) + lens > 2000):
+        lens = len(string);
+        if (len(temp) + lens > 2000):
             result.append(temp)
             temp = ""
             
