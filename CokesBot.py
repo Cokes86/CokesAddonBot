@@ -14,6 +14,23 @@ repo = g.get_repo(int(os.environ['repo_id']))
 
 latest_id = repo.get_latest_release().id;
 
+class AsyncCounter:
+    def __init__(self, stop):
+        self.current = 0
+        self.stop = stop
+ 
+    def __aiter__(self):
+        return self
+ 
+    async def __anext__(self):
+        if self.current < self.stop:
+            await asyncio.sleep(1.0)
+            r = self.current
+            self.current += 1
+            return r
+        else:
+            raise StopAsyncIteration
+
 async def github_send():
     while True:
         check = repo.get_latest_release().id;
@@ -26,9 +43,9 @@ async def github_send():
 async def send_latest_version(channel: discord.TextChannel):
     latest = repo.get_latest_release()
     await channel.send('코크스 애드온 %s 업데이트입니다.'%(latest.title))
-    
-    async for send_message in split_string(latest.body):
-        await channel.send('```%s```'%(send_message))
+    splited = split_string(latest.body)
+    async for i in AsyncCounter(len(splited)):
+        await channel.send('```%s```'%(splited[i]))
     
 async def send_latest_version_all():
     for guild in bot.guilds:
@@ -53,7 +70,7 @@ async def on_ready():
     await bot.change_presence(status=discord.Status.online, activity=game)
     bot.loop.create_task(github_send())
     
-async def split_string(body: str):
+def split_string(body: str):
     split_strings = body.split("\n")
     result = []
     temp = "";
@@ -68,22 +85,5 @@ async def split_string(body: str):
         
     result.append(temp)
     return result
-
-class AsyncCounter:
-    def __init__(self, stop):
-        self.current = 0
-        self.stop = stop
- 
-    def __aiter__(self):
-        return self
- 
-    async def __anext__(self):
-        if self.current < self.stop:
-            await asyncio.sleep(1.0)
-            r = self.current
-            self.current += 1
-            return r
-        else:
-            raise StopAsyncIteration
     
 bot.run(bot_token)
