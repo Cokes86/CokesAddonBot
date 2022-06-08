@@ -24,7 +24,7 @@ class AsyncCounter:
  
     async def __anext__(self):
         if self.current < self.stop:
-            await asyncio.sleep(1.0)
+            await asyncio.sleep(0.2)
             r = self.current
             self.current += 1
             return r
